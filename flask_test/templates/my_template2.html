@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <link rel="icon" href="https://static.jianshukeji.com/hcode/images/favicon.ico">
+        <style>
+        </style>
+        <script src="http://libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/xrange.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+        <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+    </head>
+    <body>
+        <div id="container" style="min-width:400px;height:400px"></div>       
+        <script type="text/javascript">
+            var app= [];
+            var chart; // 定义全局变量
+            function getData() {
+            $.ajax({
+                    url:'/test',
+                    type:'POST',
+                    dataType:'json',
+                    success:function(mydata) {
+                        alert(mydata.yvalue[0].x);
+                        app = mydata.yvalue;
+                        chart.series[0].setData(app);
+                        },
+                    error:function (msg) {
+                        console.log(msg);
+                        alert('系统发生错误');
+                    }
+                })
+            };
+            
+            $(document).ready(function() {
+            chart = new Highcharts.chart('container', {
+                chart: {
+                    renderTo: 'container',
+                    type: 'xrange',
+                    events: {
+                    load: getData //表加载完毕后执行的回调函数
+                    }
+                },
+                title: {
+                    text: '老人徘徊检测'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        week: '%e. %b'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    categories: ['室外走廊', '多功能活动室', '起居室'],
+                    reversed: true
+                },
+                tooltip: {
+                    dateTimeLabelFormats: {
+                        day: '%e. %b'
+                    }
+                },
+                series: [{
+                    name: '项目1',
+                    borderColor: 'gray',
+                    pointWidth: 20,
+                    data: []
+                }]
+            });
+            }); 
+
+          
+        </script>
+    </body>
+</html>

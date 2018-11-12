@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <link rel="icon" href="https://static.jianshukeji.com/hcode/images/favicon.ico">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <style>
+        </style>
+        <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+        <script src="http://cdn.hcharts.cn/highstock/highstock.js"></script> 
+        <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/xrange.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+        <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="row">
+          <div class="col-md-8" id="hyper"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-8" id="wander"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-8" id="juji"></div>
+        </div>
+        <!--<div id="wander" style="min-width:400px;height:400px"></div>  
+        <div id="hyper" style="min-width:400px;height:400px"></div> -->  
+        <script type="text/javascript">
+            var app= [];
+            //alert(options.series[0]);
+            var chart; // 定义全局变量
+            $.ajax({
+                    url:'/test',
+                    type:'POST',
+                    dataType:'json',
+                    success:function(mydata) {
+                        var options1 = {
+                                chart: {
+                                    type: 'xrange'
+                                },
+                                title: {
+                                    text: '老人徘徊检测分析'
+                                },
+                                xAxis: {
+                                    type: 'datetime',
+                                    dateTimeLabelFormats: {
+                                        second: '%H:%M:%S'
+                                    }
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: ''
+                                    },
+                                    reversed: true
+                                },
+                                tooltip: {
+                                    formatter: function () {
+                                        return '<b>' +  this.point.partialFill + '</b>';
+                                     }
+                                },
+                                credits:{
+                                    text: '养老所'
+                                },
+                                series:[]
+                            };
+                        var options2 = {
+                                chart: {
+                                    type: 'spline'
+                                },                                                              
+                                title: {
+                                    text: '老人行动过速分析'
+                                },
+                                rangeSelector: {
+                                    allButtonsEnabled: true,
+                                    buttons: [{
+                                        type: 'minute',
+                                        count: 10,
+                                        text: '10Min'
+                                    }, {
+                                        type: 'hour',
+                                        count: 1,
+                                        text: 'Hour'
+                                    },
+                                    {
+                                        type: 'hour',
+                                        count: 3,
+                                        text: '3Hour'
+                                    },
+                                    {
+                                        type: 'all',
+                                        text: 'ALL'
+                                    }],
+                                    buttonTheme: {
+                                        width: 60
+                                    },
+                                    selected: 2
+                                },
+                                xAxis: {
+                                    type: 'datetime',
+                                    dateTimeLabelFormats: {
+                                        second: '%H:%M:%S'
+                                    },
+                                    plotBands:[{
+                                        color: 'rgba(68, 170, 213, 0.1)',
+                                        from:'',
+                                        to:'',
+                                        label:{
+                                            text: '夜间',
+                                            style: {
+                                                color: '#606060'
+                                            }
+
+                                        }
+                                    },{
+                                        color: 'rgba(68, 170, 213, 0.1)',
+                                        from:'',
+                                        to:'',
+                                        label:{
+                                            text: '夜间',
+                                            style: {
+                                                color: '#606060'
+                                            }
+
+                                        }
+                                    }
+                                    ]
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: '速度 (m/s)'
+                                    },
+                                    min:0,
+                                    max:3,
+                                    plotBands:[{
+                                        color: '#FF0000',
+                                        width: 2,
+                                        value: 0.8,
+                                        label:{
+                                            text:'速度界限'
+                                        }
+                                    }]
+                                },
+                                legend: {
+                                    enabled:true
+                                },
+                                                                
+                                plotOptions: {
+                                    series: {
+                                        turboThreshold: 100000000,
+                                        showInNavigator: true
+                                    },
+                                    spline:{
+                                        tooltip: {
+                                            pointFormatter:function(){
+                                                return '<b>' + this.series.name+':'+this.vel + '</b>';
+                                            }
+                                        }
+                                    }
+
+                                },
+                                credits:{
+                                    text: '养老所'
+                                },
+                                series:[]
+                            };
+                            var options3 = {
+                                chart: {
+                                    type: 'xrange'
+                                },
+                                title: {
+                                    text: '聚集分析'
+                                },
+                                xAxis: {
+                                    type: 'datetime',
+                                    dateTimeLabelFormats: {
+                                        second: '%H:%M:%S'
+                                    }
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: ''
+                                    },
+                                    reversed: true
+                                },
+                                tooltip: {
+                                    formatter: function () {
+                                        return '<b>' +  this.point.partialFill + '</b>';
+                                     }
+                                },
+                                credits:{
+                                    text: '养老所'
+                                },
+                                series:[{data:[]}]
+                            };
+                        app = mydata.yvalue;
+                        app_wander = app.wander;
+                        app_juji = app.juji;
+                        //alert(app_wander.wander.鲁工[0].x)
+                        app_hyper = app.hyper;
+                        options1.yAxis.categories = app_wander.kongjian;
+                        options3.yAxis.categories = app_wander.kongjian;
+                        options3.series[0].data = app_juji
+                        //alert(app_wander.kongjian);
+                        //options2.yAxis.categories = app_hyper.kongjian;
+                                            
+                        for (var user in app_wander.wander) {
+                            var temp = {name:'',data:[],visible:false};
+                            //console.log(user);
+                            temp.name = user;
+                            //temp.borderColor ='gray';
+                            //temp.pointWidth = 20;
+                            temp.data = app_wander.wander[user];
+                            //alert(app_wander.wander.user);
+                            options1.series.push(temp);
+                        
+                        }
+                        //alert(options1.series[0].data)
+
+                        for (var user in app_hyper) {
+                            var temp2 = {name:'',borderColor:'',pointWidth:0,data:[],visible:false};
+                            temp2.name = user;
+                            temp2.borderColor ='gray';
+                            temp2.pointWidth = 20;
+                            temp2.data = app_hyper[user];
+                            //temp2.plotband = app_hyper[user][0].x;
+                            options2.series.push(temp2);
+                        
+                        }
+                        var time1 = app_hyper[user][0].x;
+                        var time2 = time1+6*60*60*1000;
+                        options2.xAxis.plotBands[0].from = time1;
+                        options2.xAxis.plotBands[0].to = time2;
+                        options2.xAxis.plotBands[1].from = time1+22*60*60*1000;
+                        options2.xAxis.plotBands[1].to = time1+24*60*60*1000;                        
+                        //alert(options2.series[0].name)
+                        //alert(options2.series[0].data[1].x)
+                        chart1 = new Highcharts.chart('wander', options1);
+                        chart2 = new Highcharts.stockChart('hyper', options2);
+                        chart3 = new Highcharts.chart('juji', options3);                        
+                        //chart.series[0].setData(app);
+                        },
+                    error:function (msg) {
+                        console.log(msg);
+                        alert('系统发生错误');
+                    }
+                })
+                     
+        </script>
+    </body>
+</html>

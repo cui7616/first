@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <link rel="icon" href="https://static.jianshukeji.com/hcode/images/favicon.ico">
+        <style>
+        </style>
+        <script src="http://libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/xrange.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+        <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+    </head>
+    <body>
+        <div id="container" style="min-width:400px;height:400px"></div>  
+        <div id="main2" style="min-width:400px;height:400px"></div>     
+        <script type="text/javascript">
+            var app= [];
+            var options ={
+                chart: {
+                    type: 'xrange'
+                },
+                title: {
+                    text: '老人徘徊检测'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        second: '%H:%M:%S'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    categories: ['室外走廊', '多功能活动室', '起居室'],
+                    reversed: true
+                },
+                tooltip: {
+                    dateTimeLabelFormats: {
+                        day: '%e. %b'
+                    }
+                },
+                series: [{
+                    name: '鲁工',
+                    borderColor: 'gray',
+                    pointWidth: 20
+                },{
+                    name: '李所',
+                    borderColor: 'gray',
+                    pointWidth: 20
+                },{
+                    name: '韩工',
+                    borderColor: 'gray',
+                    pointWidth: 20
+                },{
+                    name: '李工',
+                    borderColor: 'gray',
+                    pointWidth: 20
+                },{
+                    name: '崔工',
+                    borderColor: 'gray',
+                    pointWidth: 20
+                },{
+                    name: '巩所',
+                    borderColor: 'gray',
+                    pointWidth: 20
+                }],
+                credits:{
+                    text: '养老所'
+                }
+            };
+            //alert(options.series[0]);
+            var chart; // 定义全局变量
+            $.ajax({
+                    url:'/test',
+                    type:'POST',
+                    dataType:'json',
+                    success:function(mydata) {
+                        app = mydata.yvalue;
+                        options.series[0].data = app
+                        options.series[1].data = app
+                        options.series[2].data = app
+                        options.series[3].data = app
+                        options.series[4].data = app
+                        options.series[5].data = app
+                        //alert(app[0].x)
+                        chart = new Highcharts.chart('container', options);
+                        chart = new Highcharts.chart('main2', options);
+                        //chart.series[0].setData(app);
+                        },
+                    error:function (msg) {
+                        console.log(msg);
+                        alert('系统发生错误');
+                    }
+                })
+            
+
+          
+        </script>
+    </body>
+</html>
